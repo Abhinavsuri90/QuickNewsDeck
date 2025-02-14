@@ -1,4 +1,4 @@
-const NEWS_API_KEY = 'c3ac64cff86f4365b51b40b8fcee4fd1'; // Your NewsAPI key
+const MEDIASTACK_API_KEY = 'b4ec437e34e29d7a0d9a6a16d02e5280'; // Your Mediastack API key
 const UPDATE_INTERVAL = 3600000; // 1 hour
 
 // Fetch News Articles
@@ -7,9 +7,9 @@ async function fetchNews(category = 'general') {
     loading.style.display = 'block';
 
     try {
-        const response = await fetch(`https://newsapi.org/v2/top-headlines?category=${category}&apiKey=${NEWS_API_KEY}`);
+        const response = await fetch(`http://api.mediastack.com/v1/news?access_key=${MEDIASTACK_API_KEY}&categories=${category}`);
         const data = await response.json();
-        const articles = data.articles;
+        const articles = data.data;
 
         updateNewsGrid(articles);
         updateLastUpdated();
@@ -22,10 +22,10 @@ async function fetchNews(category = 'general') {
 
 // Create News Card
 function createNewsCard(article) {
-    const date = new Date(article.publishedAt).toLocaleDateString();
-    const imageSection = article.urlToImage ? `
+    const date = new Date(article.published_at).toLocaleDateString();
+    const imageSection = article.image ? `
         <div class="news-image-container">
-            <img src="${article.urlToImage}" alt="${article.title}" class="news-image">
+            <img src="${article.image}" alt="${article.title}" class="news-image">
         </div>
     ` : '';
 
@@ -36,7 +36,7 @@ function createNewsCard(article) {
                 <h2 class="news-title">${article.title}</h2>
                 <p class="news-text">${article.description || "No description available."}</p>
                 <div class="news-meta">
-                    <span>${article.source.name}</span>
+                    <span>${article.source}</span>
                     <span>${date}</span>
                 </div>
             </div>
